@@ -1,3 +1,93 @@
-<p>
-  product works!
-</p>
+<div class="d-flex justify-content-between">
+  <div class="filter">
+    <h4>Filter Products</h4>
+    <div class="row">
+      <div class="col">
+        <input type="text" [(ngModel)]="filterCategory" (ngModelChange)="searchCategory($event)" class="form-control"
+          placeholder="Category" aria-label="First name">
+      </div>
+      <div class="col">
+        <input type="text" [(ngModel)]="filterBrand" (ngModelChange)="searchBrand($event)" class="form-control"
+          placeholder="Brand" aria-label="Last name">
+      </div>
+      <div class="col">
+        <input type="text" [(ngModel)]="filterModelYear" (ngModelChange)="searchModelYear($event)" class="form-control"
+          placeholder="Model Year" aria-label="Last name">
+      </div>
+    </div>
+  </div>
+  <div class="add">
+    <button (click)="onAdd()" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product</button>
+  </div>
+</div>
+<hr>
+<ngx-table #table [data]="data" [configuration]="configuration" [columns]="columns">
+  <ng-template let-row let-index="index">
+    <td> {{row.productId}}</td>
+    <td> {{row.productName}}</td>
+    <td> {{row.brand?.brandName}}</td>
+    <td> {{row.category?.categoryName}}</td>
+    <td> {{row.modelYear}}</td>
+    <td> {{row.listPrice | currency}}</td>
+    <td>
+      <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(row)"
+        class="btn btn-outline-primary"><i class="fa fa-edit"></i></button>
+    </td>
+  </ng-template>
+</ngx-table>
+
+<!-- Modal -->
+<div class="modal modal-lg fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 *ngIf="isEditMode" class="modal-title fs-5" id="exampleModalLabel">Update Product</h1>
+        <h1 *ngIf="!isEditMode" class="modal-title fs-5" id="exampleModalLabel">Add Product</h1>
+        <button type="button" (click)="close()" id="btn-close" class="btn-close" data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="productForm" class="row g-3">
+          <div class="col-md-12">
+            <label for="inputEmail4" class="form-label">Product Name</label>
+            <input formControlName="productName" type="text" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label for="inputPassword4" class="form-label">Brand</label>
+
+            <select formControlName="brandId" class="form-select" aria-label="Default select example">
+              <option value="" selected>--Select Brand--</option>
+              <ng-container *ngFor="let row of brands">
+                <option [value]="row.brandId">{{row.brandName}}</option>
+              </ng-container>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Category</label>
+            <select formControlName="categoryId" class="form-select" aria-label="Default select example">
+              <option value="" selected>--Select Category--</option>
+              <ng-container *ngFor="let row of categories">
+                <option [value]="row.categoryId">{{row.categoryName}}</option>
+              </ng-container>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="inputPassword4" class="form-label">Model Year</label>
+            <input formControlName="modelYear" type="number" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label for="inputAddress" class="form-label">Price</label>
+            <input formControlName="listPrice" type="text" class="form-control" placeholder="Price">
+          </div>
+          <div class="col-12">
+            <button *ngIf="isEditMode" [disabled]="productForm.invalid" (click)="updateProduct()" type="submit"
+              class="btn btn-primary">Update
+              changes</button>
+            <button *ngIf="!isEditMode" [disabled]="productForm.invalid" (click)="addProduct()" type="submit"
+              class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

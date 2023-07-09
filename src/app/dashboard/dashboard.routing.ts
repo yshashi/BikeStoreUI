@@ -8,6 +8,9 @@ import { CategoryComponent } from './category/category.component';
 import { StaffComponent } from './staff/staff.component';
 import { StoreComponent } from './store/Store.component';
 import { AuthGuard } from '../guards/auth.guard';
+import { ProductComponent } from './product/product.component';
+import { OrderComponent } from './order/order.component';
+import { OrderDetailComponent } from './order-detail/order-detail.component';
 
 const routes: Routes = [
   {path: '', component: DashboardComponent,
@@ -18,6 +21,9 @@ const routes: Routes = [
     { path: 'staff', component: StaffComponent, canActivate:[AuthGuard] },
     { path: 'category', component: CategoryComponent, canActivate:[AuthGuard] },
     { path: 'brands', component: BrandsComponent, canActivate:[AuthGuard] },
+    { path: 'products', component: ProductComponent, canActivate: [AuthGuard] },
+    { path: 'orders', component: OrderComponent, canActivate: [AuthGuard] },
+    { path: 'order-detail/:id', component: OrderDetailComponent, canActivate: [AuthGuard] },
   ]},
 ];
 

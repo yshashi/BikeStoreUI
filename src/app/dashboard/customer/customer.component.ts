@@ -24,8 +24,6 @@ export class CustomerComponent implements OnInit {
   public columns: Columns[] = [];
   public data: any[] = [];
 
-  @ViewChild('table') table!: APIDefinition;
-
   ngOnInit(): void {
     this.customerForm = this.fb.group({
       firstName: ['', Validators.required],

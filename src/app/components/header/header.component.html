@@ -10,6 +10,8 @@
     <ul class="nav nav-pills">
       <li class="nav-item"><a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">Home</a></li>
       <li class="nav-item"><a routerLink="/home/customer" routerLinkActive="active" class="nav-link">Customer</a></li>
+      <li class="nav-item"><a routerLink="/home/products" routerLinkActive="active" class="nav-link">Products</a></li>
+      <li class="nav-item"><a routerLink="/home/orders" routerLinkActive="active" class="nav-link">Orders</a></li>
       <li class="nav-item"><a routerLink="/home/store" routerLinkActive="active" class="nav-link">Store</a></li>
       <li *ngIf="role === 'Admin' || role === 'Stakeholder'" class="nav-item"><a routerLink="/home/staff" routerLinkActive="active" class="nav-link">Staff</a></li>
       <li *ngIf="role === 'Admin'|| role === 'Stakeholder'" class="nav-item"><a routerLink="/home/category" routerLinkActive="active" class="nav-link">Category</a></li>

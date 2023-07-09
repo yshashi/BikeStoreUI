@@ -14,6 +14,7 @@ import { TableModule } from 'ngx-easy-table';
 import { ProductComponent } from './product/product.component';
 import { OrderComponent } from './order/order.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OrderDetailComponent } from './order-detail/order-detail.component';
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     CategoryComponent,
     ProductComponent,
     OrderComponent,
+    OrderDetailComponent,
     BrandsComponent
   ]
 })
