@@ -1,0 +1,90 @@
+<div style="margin-top: 4%;" class="container d-flex justify-content-center align-items-center">
+  <div class="card col-md-5 mx-auto">
+    <div class="card-body">
+      <h3 class="card-title text-center">Register</h3>
+      <h6 class="card-subtitle text-center mb-2 text-body-secondary">Register to Log in BikeShop</h6>
+      <form [formGroup]="registerForm">
+        <div class="row">
+          <div class="col">
+            <label class="form-label">Firstname</label>
+            <input formControlName="firstName" type="text" class="form-control">
+            <small *ngIf="registerForm.controls['firstName'].dirty && registerForm.hasError('required', 'firstName')"
+              class="text-danger">*Firstname is required!</small>
+          </div>
+          <div class="col">
+            <label class="form-label">Lastname</label>
+            <input formControlName="lastName" type="text" class="form-control">
+            <small *ngIf="registerForm.controls['lastName'].dirty && registerForm.hasError('required', 'lastName')"
+              class="text-danger">*Lastname is
+              Required</small>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <label class="form-label">Email</label>
+            <input formControlName="email" type="email" class="form-control">
+            <small *ngIf="registerForm.controls['email'].dirty && registerForm.hasError('required', 'email')"
+              class="text-danger">*Email is Required</small>
+          </div>
+          <div class="col">
+            <label class="form-label">Password</label>
+            <input formControlName="password" type="password" class="form-control">
+            <small *ngIf="registerForm.controls['password'].dirty && registerForm.hasError('required', 'password')"
+              class="text-danger">*Password is Required</small>
+          </div>
+        </div>
+        <div class="row">
+
+          <div class="col">
+            <label class="form-label">Phone</label>
+            <input formControlName="phone" type="text" class="form-control">
+            <small *ngIf="registerForm.controls['phone'].dirty && registerForm.hasError('required', 'phone')"
+              class="text-danger">*Phone is Required</small>
+          </div>
+
+          <div class="col">
+            <label class="form-label">Active</label>
+            <select formControlName="active" class="form-select" aria-label="Default select example">
+              <option value="">--Select--</option>
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select>
+            <small *ngIf="registerForm.controls['active'].dirty && registerForm.hasError('required', 'active')"
+              class="text-danger">*Active is required!</small>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Store</label>
+          <select formControlName="storeId" class="form-select" aria-label="Default select example">
+            <option value="" selected>--Select Store--</option>
+            <ng-container *ngFor="let row of stores">
+              <option [value]="row.storeId">{{row.storeName}}</option>
+            </ng-container>
+
+          </select>
+          <small *ngIf="registerForm.controls['storeId'].dirty && registerForm.hasError('required', 'storeId')"
+            class="text-danger">*Store is
+            Required</small>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Manager</label>
+          <select formControlName="managerId" class="form-select" aria-label="Default select example">
+            <option value="" selected>--Select Manager--</option>
+            <ng-container *ngFor="let row of staffs">
+              <option *ngIf="row.managerId === null && row.staffId === 1" [value]="row.staffId">{{row.firstName}} - Admin</option>
+              <option *ngIf="row.managerId != null && row.staffId != 1" [value]="row.staffId">{{row.firstName}} - StakeHolder</option>
+            </ng-container>
+          </select>
+          <small *ngIf="registerForm.controls['managerId'].dirty && registerForm.hasError('required', 'managerId')"
+            class="text-danger">*Manager is
+            Required</small>
+        </div>
+        <button [disabled]="!registerForm.valid" type="button" (click)="register()"
+          class="btn btn-primary d-block mx-auto">Register</button>
+      </form>
+      <p class="mt-3">Already have a account? Kindly <a routerLink="/login">Login</a> </p>
+
+    </div>
+  </div>
+</div>

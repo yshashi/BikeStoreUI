@@ -1,0 +1,28 @@
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Staff ID</th>
+      <th scope="col">Firstname</th>
+      <th scope="col">Lastname</th>
+      <th scope="col">Email</th>
+      <th scope="col">Phone</th>
+      <th scope="col">Active</th>
+      <th scope="col">Store ID</th>
+      <th scope="col">Role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of staffs">
+      <td>{{row.staffId}}</td>
+      <td>{{row.firstName}}</td>
+      <td>{{row.lastName}}</td>
+      <td>{{row.email}}</td>
+      <td>{{row.phone}}</td>
+      <td>{{row.active === 1 ? "Yes" : "No"}}</td>
+      <td>{{row.storeId}}</td>
+      <td>{{showRole(row.managerId)}}</td>
+    </tr>
+
+  </tbody>
+</table>

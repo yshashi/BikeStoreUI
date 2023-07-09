@@ -1,0 +1,90 @@
+<div class="d-flex justify-content-between">
+  <div class="filter">
+    <h4>Filter Customers</h4>
+    <div class="row">
+      <div class="col">
+        <input type="text" [(ngModel)]="filterCity" (ngModelChange)="searchCity($event)" class="form-control" placeholder="City" aria-label="First name">
+      </div>
+      <div class="col">
+        <input type="text" [(ngModel)]="filterZipCode" (ngModelChange)="searchZipcode($event)" class="form-control" placeholder="Zip Code" aria-label="Last name">
+      </div>
+    </div>
+  </div>
+  <div class="add">
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Customer</button>
+  </div>
+</div>
+<hr>
+<ngx-table #table [data]="data" [configuration]="configuration" [columns]="columns">
+  <ng-template let-row let-index="index">
+    <td> {{row.customerId}}</td>
+    <td> {{row.firstName}}</td>
+    <td> {{row.lastName}}</td>
+    <td> {{row.email}}</td>
+    <td> {{row.state}}</td>
+    <td> {{row.street}}</td>
+    <td> {{row.city}}</td>
+    <td> {{row.zipCode}}</td>
+    <td>
+      <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(row)" class="btn btn-outline-primary"><i class="fa fa-edit"></i></button>
+    </td>
+  </ng-template>
+</ngx-table>
+
+
+
+
+
+<!-- Modal -->
+<div class="modal modal-lg fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 *ngIf="isEditMode" class="modal-title fs-5" id="exampleModalLabel">Update Customer</h1>
+        <h1 *ngIf="!isEditMode" class="modal-title fs-5" id="exampleModalLabel">Customer Registration</h1>
+        <button type="button" (click)="close()" id="btn-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="customerForm" class="row g-3">
+          <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">First Name</label>
+            <input formControlName="firstName" type="text" class="form-control" >
+          </div>
+          <div class="col-md-6">
+            <label for="inputPassword4" class="form-label">Last Name</label>
+            <input formControlName="lastName" type="text" class="form-control" >
+          </div>
+          <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Phone</label>
+            <input formControlName="phone" type="text" class="form-control" >
+          </div>
+          <div class="col-md-6">
+            <label for="inputPassword4" class="form-label">Email</label>
+            <input formControlName="email" type="email" class="form-control" >
+          </div>
+          <div class="col-12">
+            <label for="inputAddress" class="form-label">Street</label>
+            <input formControlName="street" type="text" class="form-control"  placeholder="1234 Main St">
+          </div>
+          <div class="col-md-6">
+            <label for="inputCity" class="form-label">City</label>
+            <input formControlName="city" type="text" class="form-control" >
+          </div>
+          <div class="col-md-4">
+            <label for="inputState" class="form-label">State</label>
+            <input formControlName="state" type="text" class="form-control" >
+          </div>
+          <div class="col-md-2">
+            <label for="inputZip" class="form-label">Zip</label>
+            <input formControlName="zipCode" type="text" class="form-control" >
+          </div>
+          <div class="col-12">
+            <button *ngIf="isEditMode" [disabled]="customerForm.invalid" (click)="updateCustomer()" type="submit" class="btn btn-primary">Update
+              changes</button>
+            <button *ngIf="!isEditMode" [disabled]="customerForm.invalid" (click)="addCustomer()" type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

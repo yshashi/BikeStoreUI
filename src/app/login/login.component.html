@@ -1,0 +1,26 @@
+<div style="margin-top: 10%;" class="container d-flex justify-content-center align-items-center">
+  <div class="card col-md-5 mx-auto">
+    <div class="card-body">
+      <h3 class="card-title text-center">Login</h3>
+      <h6 class="card-subtitle text-center mb-2 text-body-secondary">Login into BikeStore</h6>
+      <form [formGroup]="loginForm">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Email address</label>
+          <input formControlName="email" type="email" class="form-control" id="exampleInputEmail1"
+            aria-describedby="emailHelp">
+          <small *ngIf="loginForm.controls['email'].dirty && loginForm.hasError('required', 'email')"
+            class="text-danger">Email is Required</small>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input formControlName="password" type="password" class="form-control" id="exampleInputPassword1">
+          <small *ngIf="loginForm.controls['password'].dirty && loginForm.hasError('required', 'password')"
+            class="text-danger">Password is Required</small>
+        </div>
+        <button [disabled]="!loginForm.valid" (click)="login()" type="button"
+          class="btn btn-primary d-block mx-auto">Login</button>
+      </form>
+      <p class="mt-3">New User? Kindly <a routerLink="/register">Register</a> </p>
+    </div>
+  </div>
+</div>

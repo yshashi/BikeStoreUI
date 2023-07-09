@@ -1,0 +1,43 @@
+<div class="d-flex justify-content-between">
+  <h4>Brands</h4>
+  <button (click)="onAddClicked()" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Brand</button>
+</div>
+<hr>
+<ngx-table [data]="data" [configuration]="configuration" [columns]="columns">
+  <ng-template let-row let-index="index">
+    <td> {{row.brandId}}</td>
+    <td> {{row.brandName}}</td>
+    <td>
+      <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(row)"
+        class="btn btn-outline-primary"><i class="fa fa-edit"></i></button>
+    </td>
+  </ng-template>
+</ngx-table>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 *ngIf="isEditMode" class="modal-title fs-5" id="exampleModalLabel">Update Brand</h1>
+        <h1 *ngIf="!isEditMode" class="modal-title fs-5" id="exampleModalLabel">Add Brand</h1>
+        <button type="button" id="btn-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="brandForm" class="row g-3">
+          <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Brand Name</label>
+            <input formControlName="brandName" type="text" class="form-control">
+          </div>
+          <div class="col-12">
+            <button *ngIf="isEditMode" [disabled]="brandForm.invalid" (click)="updateBrand()" type="submit"
+              class="btn btn-primary">Update
+              changes</button>
+            <button *ngIf="!isEditMode" [disabled]="brandForm.invalid" (click)="addBrand()" type="submit"
+              class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

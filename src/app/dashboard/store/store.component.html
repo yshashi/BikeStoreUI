@@ -1,0 +1,73 @@
+<div class="d-flex justify-content-between">
+  <h4>Stores</h4>
+  <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Store</button>
+</div>
+<hr>
+<ngx-table #table [data]="data" [configuration]="configuration" [columns]="columns">
+  <ng-template let-row let-index="index">
+    <td> {{row.storeId}}</td>
+    <td> {{row.storeName}}</td>
+    <td> {{row.phone}}</td>
+    <td> {{row.email}}</td>
+    <td> {{row.street}}</td>
+    <td> {{row.city}}</td>
+    <td> {{row.state}}</td>
+    <td> {{row.zipCode}}</td>
+    <td>
+      <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(row)"
+        class="btn btn-outline-primary"><i class="fa fa-edit"></i></button>
+    </td>
+  </ng-template>
+</ngx-table>
+
+<!-- Modal -->
+<div class="modal modal-lg fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 *ngIf="isEditMode" class="modal-title fs-5" id="exampleModalLabel">Update Store</h1>
+        <h1 *ngIf="!isEditMode" class="modal-title fs-5" id="exampleModalLabel">Add Store</h1>
+        <button type="button" id="btn-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="storeForm" class="row g-3">
+          <div class="col-md-6">
+            <label for="inputEmail4" class="form-label">Store Name</label>
+            <input formControlName="storeName" type="text" class="form-control">
+          </div>
+          <div class="col-md-6">
+            <label for="inputPassword4" class="form-label">Phone</label>
+            <input formControlName="phone" type="text" class="form-control">
+          </div>
+          <div class="col-md-12">
+            <label for="inputPassword4" class="form-label">Email</label>
+            <input formControlName="email" type="email" class="form-control">
+          </div>
+          <div class="col-12">
+            <label for="inputAddress" class="form-label">Street</label>
+            <input formControlName="street" type="text" class="form-control" placeholder="1234 Main St">
+          </div>
+          <div class="col-md-6">
+            <label for="inputCity" class="form-label">City</label>
+            <input formControlName="city" type="text" class="form-control">
+          </div>
+          <div class="col-md-4">
+            <label for="inputState" class="form-label">State</label>
+            <input formControlName="state" type="text" class="form-control">
+          </div>
+          <div class="col-md-2">
+            <label for="inputZip" class="form-label">Zip</label>
+            <input formControlName="zipCode" type="text" class="form-control">
+          </div>
+          <div class="col-12">
+            <button *ngIf="isEditMode" [disabled]="storeForm.invalid" (click)="updateStore()" type="submit"
+              class="btn btn-primary">Update
+              changes</button>
+            <button *ngIf="!isEditMode" [disabled]="storeForm.invalid" (click)="addStore()" type="submit"
+              class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
