@@ -10,7 +10,7 @@
           <span><strong>Customer Name:</strong> {{orderDetail?.customer?.firstName}}</span><br>
           <span><strong>Order Date:</strong> {{orderDetail?.orderDate | date}}</span><br>
           <span><strong>Shipped Date:</strong> {{orderDetail?.shippedDate | date}}</span><br>
-          <span><strong>Order Status:</strong> {{orderStatus[orderDetail?.orderStatus - 1]}}</span><br>
+          <span><strong>Order Status:</strong> {{orderStatus[orderDetail?.orderStatus]}}</span><br>
           <span><strong>Staff Name:</strong> {{orderDetail?.staff?.firstName}}</span><br>
           <span><strong>Store Date:</strong> {{orderDetail?.store?.storeName}}</span>
           <hr>

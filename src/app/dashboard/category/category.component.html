@@ -1,13 +1,13 @@
 <div class="d-flex justify-content-between">
   <h4>Categories</h4>
-  <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Category</button>
+  <button *ngIf="role === 'Admin'" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Category</button>
 </div>
 <hr>
 <ngx-table [data]="data" [configuration]="configuration" [columns]="columns">
   <ng-template let-row let-index="index">
     <td> {{row.categoryId}}</td>
     <td> {{row.categoryName}}</td>
-    <td>
+    <td *ngIf="role === 'Admin'">
       <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(row)"
         class="btn btn-outline-primary"><i class="fa fa-edit"></i></button>
     </td>

@@ -59,7 +59,7 @@ export class RegisterComponent implements OnInit {
     this.staffService.getAll()
     .subscribe(res=>{
       this.staffs = res.filter((a:any)=>{
-        return a.managerId === 1 || a.managerId === null;
+        return a.managerId === 1 || a.managerId === null; // will return only admin and stakeholders
       });
     })
   }

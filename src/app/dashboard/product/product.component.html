@@ -16,7 +16,7 @@
       </div>
     </div>
   </div>
-  <div class="add">
+  <div *ngIf="(role !== 'Staff' && role !== 'Stakeholder')"  class="add">
     <button (click)="onAdd()" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product</button>
   </div>
 </div>
@@ -29,7 +29,7 @@
     <td> {{row.category?.categoryName}}</td>
     <td> {{row.modelYear}}</td>
     <td> {{row.listPrice | currency}}</td>
-    <td>
+    <td *ngIf="role === 'Admin'">
       <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(row)"
         class="btn btn-outline-primary"><i class="fa fa-edit"></i></button>
     </td>

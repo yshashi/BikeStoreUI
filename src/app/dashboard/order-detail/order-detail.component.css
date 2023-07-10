@@ -49,10 +49,6 @@ h2 {
   padding-left: 15px;
 }
 
-.required {
-  color: red;
-}
-
 label,
 table {
   display: block;
@@ -94,7 +90,6 @@ select {
 
 
 tr>td:nth-child(2) {
-  text-align: right;
   color: #52ad9c;
 }
 

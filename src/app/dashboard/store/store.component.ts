@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgToastService } from 'ng-angular-popup';
 import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
+import { AuthService } from 'src/app/service/auth.service';
 import { StoreService } from 'src/app/service/store.service';
 
 @Component({
@@ -17,23 +18,37 @@ export class StoreComponent implements OnInit {
   categories = [];
   isEditMode = false;
   storeIdToUpdate = 0;
+  role = '';
 
   storeForm!: FormGroup;
-  constructor(private storeService: StoreService, private fb: FormBuilder, private toast: NgToastService) { }
+  constructor(private storeService: StoreService,private auth: AuthService, private fb: FormBuilder, private toast: NgToastService) { }
 
   ngOnInit() {
-    this.columns = [
-      { key: 'storeId', title: 'Store ID' },
-      { key: 'storeName', title: 'Store Name' },
-      { key: 'phone', title: 'Phone' },
-      { key: 'email', title: 'Email' },
-      { key: 'street', title: 'Street' },
-      { key: 'city', title: 'City' },
-      { key: 'state', title: 'State' },
-      { key: 'zipCode', title: 'ZipCode' },
-      { key: 'action', title: 'Action' }
-
-    ];
+    this.role = this.auth.getDecodedToken().role;
+    if(this.role === 'Admin'){
+      this.columns = [
+        { key: 'storeId', title: 'Store ID' },
+        { key: 'storeName', title: 'Store Name' },
+        { key: 'phone', title: 'Phone' },
+        { key: 'email', title: 'Email' },
+        { key: 'street', title: 'Street' },
+        { key: 'city', title: 'City' },
+        { key: 'state', title: 'State' },
+        { key: 'zipCode', title: 'ZipCode' },
+      ];
+    }else{
+      this.columns = [
+        { key: 'storeId', title: 'Store ID' },
+        { key: 'storeName', title: 'Store Name' },
+        { key: 'phone', title: 'Phone' },
+        { key: 'email', title: 'Email' },
+        { key: 'street', title: 'Street' },
+        { key: 'city', title: 'City' },
+        { key: 'state', title: 'State' },
+        { key: 'zipCode', title: 'ZipCode' },
+        { key: 'action', title: 'Action' }
+      ];
+    }
     this.getAllStores();
 
     this.storeForm = this.fb.group({
@@ -48,15 +63,10 @@ export class StoreComponent implements OnInit {
   }
   getAllStores() {
     this.storeService.getAll()
-      .subscribe({
-        next: (res) => {
-          this.categories = res;
-          this.data = this.categories;
-          this.configuration = { ...DefaultConfig };
-        },
-        error: (err) => {
-          console.log(err);
-        }
+      .subscribe(res=>{
+        this.categories = res;
+        this.data = this.categories;
+        this.configuration = { ...DefaultConfig };
       })
   }
 
@@ -97,5 +107,9 @@ export class StoreComponent implements OnInit {
         this.getAllStores();
         document.getElementById("btn-close")?.click();
       });
+  }
+  onAdd(){
+    this.isEditMode = false;
+    this.storeForm.reset();
   }
 }

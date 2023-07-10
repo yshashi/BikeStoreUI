@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgToastService } from 'ng-angular-popup';
 import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
 import { ProductService } from 'src/app/service/product.service';
+import { AuthService } from 'src/app/service/auth.service';
 
 @Component({
   selector: 'app-product',
@@ -21,12 +22,14 @@ export class ProductComponent implements OnInit {
   isEditMode = false;
 
   brands: any[] = [];
+  role = '';
   categories: any[] = [];
   productIdToUpdate: number = 0;
 
   productForm!: FormGroup;
   constructor(private fb: FormBuilder,private productService: ProductService,
     private brandService: BrandService,
+    private auth: AuthService,
     private categoryService: CategoryService,
     private toast: NgToastService) { }
   public configuration!: Config;
@@ -34,6 +37,7 @@ export class ProductComponent implements OnInit {
   public data: any[] = [];
 
   ngOnInit(): void {
+    this.role = this.auth.getDecodedToken().role;
     this.productForm = this.fb.group({
       productName: ['', Validators.required],
       brandId: ['', Validators.required],
@@ -41,20 +45,31 @@ export class ProductComponent implements OnInit {
       modelYear: ['', Validators.required],
       listPrice: ['', Validators.required],
     })
-    this.columns = [
-      { key: 'productId', title: 'Product ID' },
-      { key: 'productName', title: 'Product Name', width:'30%' },
-      { key: 'brand.brandName', title: 'Brand' },
-      { key: 'category.categoryName', title: 'Category' },
-      { key: 'modelYear', title: 'Model Year' },
-      { key: 'listPrice', title: 'Price' },
-      { key: 'action', title: 'Action' }
 
-    ];
     this.getAllProduct();
     this.getAllBrands();
     this.getAllCategory();
 
+    if (this.role === 'Staff' || this.role === 'Stakeholder'){
+      this.columns = [
+        { key: 'productId', title: 'Product ID' },
+        { key: 'productName', title: 'Product Name', width: '30%' },
+        { key: 'brand.brandName', title: 'Brand' },
+        { key: 'category.categoryName', title: 'Category' },
+        { key: 'modelYear', title: 'Model Year' },
+        { key: 'listPrice', title: 'Price' }
+      ];
+    }else{
+      this.columns = [
+        { key: 'productId', title: 'Product ID' },
+        { key: 'productName', title: 'Product Name', width: '30%' },
+        { key: 'brand.brandName', title: 'Brand' },
+        { key: 'category.categoryName', title: 'Category' },
+        { key: 'modelYear', title: 'Model Year' },
+        { key: 'listPrice', title: 'Price' },
+        { key: 'action', title: 'Action' }
+      ];
+    }
   }
 
   getAllBrands(){

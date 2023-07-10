@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgToastService } from 'ng-angular-popup';
 import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
+import { AuthService } from 'src/app/service/auth.service';
 import { BrandService } from 'src/app/service/brand.service';
 
 @Component({
@@ -16,20 +17,30 @@ export class BrandsComponent implements OnInit {
   public data: any[] = [];
   brands = [];
 
+  role = "";
+
   brandIdToUpdate = 0;
 
   brandForm!: FormGroup;
 
   isEditMode = false;
-  constructor(private brandService: BrandService, private fb: FormBuilder, private toast: NgToastService) { }
+  constructor(private brandService: BrandService, private fb: FormBuilder, private toast: NgToastService, private auth: AuthService) { }
 
   ngOnInit() {
-    this.columns = [
-      { key: 'brandId', title: 'Brand ID' },
-      { key: 'brandName', title: 'Brand Name' },
-      {key:'action', title: 'Action'}
+    this.role = this.auth.getDecodedToken().role;
+    if(this.role === 'Stakeholder'){
+      this.columns = [
+        { key: 'brandId', title: 'Brand ID' },
+        { key: 'brandName', title: 'Brand Name' }
+      ];
+    }else{
+      this.columns = [
+        { key: 'brandId', title: 'Brand ID' },
+        { key: 'brandName', title: 'Brand Name' },
+        { key: 'action', title: 'Action' }
 
-    ];
+      ];
+    }
     this.getAllBrands();
 
     this.brandForm = this.fb.group({
@@ -47,7 +58,7 @@ export class BrandsComponent implements OnInit {
         error: (err) => {
           console.log(err);
         }
-      })
+      });
   }
 
   onEdit(row: any){

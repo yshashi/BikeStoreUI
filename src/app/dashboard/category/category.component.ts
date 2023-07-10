@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgToastService } from 'ng-angular-popup';
 import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
+import { AuthService } from 'src/app/service/auth.service';
 import { CategoryService } from 'src/app/service/category.service';
 
 @Component({
@@ -18,16 +19,26 @@ export class CategoryComponent implements OnInit {
   categoryIdToUpdate = 0;
 
   categoryForm!: FormGroup;
+  role = "";
 
   isEditMode = false;
-  constructor(private categoryService: CategoryService, private fb: FormBuilder, private toast: NgToastService) { }
+  constructor(private categoryService: CategoryService, private fb: FormBuilder,private auth: AuthService, private toast: NgToastService) { }
 
   ngOnInit() {
-    this.columns = [
-      { key: 'categoryId', title: 'Category ID' },
-      { key: 'categoryName', title: 'Category Name' }
+    this.role = this.auth.getDecodedToken().role;
+    if (this.role === 'Stakeholder') {
+      this.columns = [
+        { key: 'brandId', title: 'Brand ID' },
+        { key: 'brandName', title: 'Brand Name' }
+      ];
+    } else {
+      this.columns = [
+        { key: 'brandId', title: 'Brand ID' },
+        { key: 'brandName', title: 'Brand Name' },
+        { key: 'action', title: 'Action' }
 
-    ];
+      ];
+    }
     this.getAllBrands();
 
     this.categoryForm = this.fb.group({

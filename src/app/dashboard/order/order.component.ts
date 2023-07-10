@@ -3,7 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
+import { AuthService } from 'src/app/service/auth.service';
+import { CustomerService } from 'src/app/service/customer.service';
 import { OrderService } from 'src/app/service/order.service';
+import { ProductService } from 'src/app/service/product.service';
+import { StaffService } from 'src/app/service/staff.service';
 import { orderStatus } from 'src/app/shared/order-staus';
 
 @Component({
@@ -14,6 +18,10 @@ import { orderStatus } from 'src/app/shared/order-staus';
 export class OrderComponent implements OnInit {
 
   orders: any[] = [];
+  customers: any[] = [];
+  products: any[] = [];
+
+  selectedItems: any[] = [];
   orderDetails: any;
   filteredorders: any[] = [];
   filterBrand = '';
@@ -22,58 +30,150 @@ export class OrderComponent implements OnInit {
   isEditMode = false;
   orderStatus = orderStatus;
 
+  role = '';
   brands: any[] = [];
   categories: any[] = [];
   productIdToUpdate: number = 0;
 
-  productForm!: FormGroup;
+  selectedItemForm!: FormGroup;
   constructor(private fb: FormBuilder, private orderService: OrderService,
+    private productService: ProductService,
+    private staffService: StaffService,
+    private customerService: CustomerService,
     private router: Router,
-
+    private auth: AuthService,
     private toast: NgToastService) { }
   public configuration!: Config;
   public columns: Columns[] = [];
   public data: any[] = [];
 
   ngOnInit(): void {
-    this.productForm = this.fb.group({
-      productName: ['', Validators.required],
-      brandId: ['', Validators.required],
-      categoryId: ['', Validators.required],
-      modelYear: ['', Validators.required],
-      listPrice: ['', Validators.required],
-    })
-    this.columns = [
-      { key: 'orderId', title: 'Order ID', width:'10%' },
-      { key: 'customer.firstName', title: 'Customer Name',width:'18%' },
-      { key: 'orderStatus', title: 'Status' },
-      { key: 'orderDate', title: 'Order Date' },
-      { key: 'shippedDate', title: 'Shipped Date' },
-      { key: 'store.storeName', title: 'Store Name' },
-      { key: 'staff.firstName', title: 'Staff Name' },
-      { key: 'action', title: 'Action' }
+    this.selectedItemForm = this.fb.group({
+      customerId: ['',],
+      productId: ['', Validators.required],
+      discount: ['', Validators.required],
+      quantity: ['', Validators.required],
+      orderStatus: ['', Validators.required],
+    });
 
-    ];
-    // this.getAllProduct();
-    // this.getAllBrands();
-    // this.getAllCategory();
-    this.getAllOrders();
+    this.getAllCustomer();
+    this.getAllProduct();
 
+    const staffId = this.auth.getDecodedToken().staffId;
+    this.role = this.auth.getDecodedToken().role;
+    if (this.role === 'Staff' || this.role === "Admin") {
+      if (this.role === 'Admin') {
+        this.getAllOrders();
+      } else {
+        this.getAllOrdersByStaff(staffId);
+      }
+
+      this.columns = [
+        { key: 'orderId', title: 'Order ID', width: '10%' },
+        { key: 'customer.firstName', title: 'Customer Name', width: '18%' },
+        { key: 'orderStatus', title: 'Status' },
+        { key: 'orderDate', title: 'Order Date' },
+        { key: 'shippedDate', title: 'Shipped Date' },
+        { key: 'store.storeName', title: 'Store Name' },
+        { key: 'staff.firstName', title: 'Staff Name' }
+
+      ];
+    } else {
+      this.getAllOrders();
+      this.columns = [
+        { key: 'orderId', title: 'Order ID', width: '10%' },
+        { key: 'customer.firstName', title: 'Customer Name', width: '18%' },
+        { key: 'orderStatus', title: 'Status' },
+        { key: 'orderDate', title: 'Order Date' },
+        { key: 'shippedDate', title: 'Shipped Date' },
+        { key: 'store.storeName', title: 'Store Name' },
+        { key: 'staff.firstName', title: 'Staff Name' },
+        { key: 'action', title: 'Action', }
+      ];
+    }
+    // this.staffService.getAll()
+    //   .subscribe(res => {
+    //     res.forEach((a:any)=>{
+    //       if(a.staffId === staffId){
+    //         this.selectedStaffId = a.staffId;
+    //         this.selectedStoreId = a.storeId
+    //       }
+    //     })
+
+    //   });
   }
 
-  // getAllBrands() {
-  //   this.brandService.getAll()
+  // selectCustomerId = 0;
+  // selectedProductPrice = 0;
+  // selectedStaffId = 0;
+  // selectedStoreId = 0;
+
+  // itemId = 1;
+  // addSelectedItem() {
+
+  //   let items = {
+  //     itemId: this.itemId++,
+  //     listPrice: this.selectedProductPrice,
+  //     productId: this.selectedItemForm.value.productId,
+  //     discount: this.selectedItemForm.value.discount / 100,
+  //     quantity: this.selectedItemForm.value.quantity
+  //   }
+  //   this.selectedItems.push(items);
+  //   this.selectedItemForm.reset();
+  //   this.selectedItemForm.controls['customerId'].patchValue(this.selectCustomerId);
+  //   this.selectedItemForm.controls['orderStatus'].patchValue(0);
+  // }
+  // selectCustomer() {
+  //   this.selectCustomerId = this.selectedItemForm.value.customerId;
+  //   this.selectedItemForm.controls['customerId'].disable();
+  // }
+
+  // selectProductPrice() {
+  //   this.selectedProductPrice = this.products[this.selectedItemForm.value.productId - 1].listPrice;
+  // }
+
+  // saveChanges() {
+  //   let createOderObj = {
+  //     customerId: +this.selectCustomerId,
+  //     staffId: this.selectedStaffId,
+  //     orderStatus: 0,
+  //     storeId: this.selectedStoreId,
+  //     orderItems: this.selectedItems
+  //   }
+  //   console.log(createOderObj);
+  //   this.orderService.createOrder(createOderObj)
   //     .subscribe(res => {
-  //       this.brands = res;
+  //       this.toast.success({ detail: "SUCCESS", summary: "Order Created", duration: 2000 });
+  //       this.selectedItemForm.reset();
+  //       document.getElementById("btn-close")?.click();
   //     })
   // }
 
-  // getAllCategory() {
-  //   this.categoryService.getAll()
-  //     .subscribe(res => {
-  //       this.categories = res;
-  //     })
-  // }
+  getAllCustomer() {
+    this.customerService.getAll()
+      .subscribe({
+        next: (res) => {
+          this.customers = res;
+          this.configuration = { ...DefaultConfig };
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      })
+  }
+
+  getAllProduct() {
+    this.productService.getAll()
+      .subscribe({
+        next: (res) => {
+          this.products = res;
+          this.configuration = { ...DefaultConfig };
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      })
+  }
 
   getAllOrders() {
     this.orderService.getAll()
@@ -90,79 +190,55 @@ export class OrderComponent implements OnInit {
         }
       })
   }
+  getAllOrdersByStaff(id: number) {
+    this.orderService.getOrdersByStaffId(id)
+      .subscribe({
+        next: (res) => {
+          this.orders = res;
 
-  viewOrder(id: number){
+          this.data = this.orders;
+          this.filteredorders = this.orders;
+          this.configuration = { ...DefaultConfig };
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      })
+  }
+
+  viewOrder(id: number) {
     this.router.navigate(['home/order-detail', id])
   }
-  // searchCategory(city: string) {
-  //   this.orderService.getByCategory(city)
-  //     .subscribe(res => {
-  //       this.filteredorders = res;
-  //       this.data = this.filteredorders;
-  //     })
-  // }
-
-  // searchBrand(zipCode: string) {
-  //   this.orderService.getByBrand(zipCode)
-  //     .subscribe(res => {
-  //       this.filteredorders = res;
-  //       this.data = this.filteredorders;
-  //     })
-  // }
-
-  // searchModelYear(year: string) {
-  //   this.orderService.getByModelYear(year)
-  //     .subscribe(res => {
-  //       this.filteredorders = res;
-  //       this.data = this.filteredorders;
-  //     })
-  // }
 
   onAdd() {
-    this.productForm.reset();
     this.isEditMode = false;
   }
 
-  // addProduct() {
-  //   console.log(this.productForm.value);
-  //   this.orderService.createProduct(this.productForm.value)
-  //     .subscribe(res => {
-  //       console.log(res);
-  //       this.toast.success({ summary: "Product Added Successfully", detail: "SUCCESS", duration: 2000 });
-  //       this.productForm.reset();
-  //       this.getAllProduct();
-  //       document.getElementById("btn-close")?.click();
-  //     })
-  // }
 
+  orderIdToUpdateStatus = 0;
   onEdit(row: any) {
     this.isEditMode = true;
-    this.productIdToUpdate = row.productId;
-    this.productForm.setValue({
-      productName: row.productName,
-      brandId: row.brandId,
-      categoryId: row.categoryId,
-      modelYear: row.modelYear,
-      listPrice: row.listPrice,
-    })
+    this.orderIdToUpdateStatus = row.orderId
 
+    this.selectedItemForm.controls['customerId'].patchValue(row.customerId);
+    this.selectedItemForm.controls['customerId'].disable();
+    this.selectedItemForm.controls['orderStatus'].patchValue(row.orderStatus)
   }
 
-  // updateProduct() {
-  //   let productObj = {
-  //     productId: this.productIdToUpdate,
-  //     ...this.productForm.value
-  //   }
-  //   this.orderService.updateProduct(productObj)
-  //     .subscribe(res => {
-  //       console.log(res);
-  //       this.isEditMode = false;
-  //       this.toast.success({ summary: "Product Updated Successfully!", detail: "SUCCESS", duration: 2000 });
-  //       this.productForm.reset();
-  //       this.getAllProduct();
-  //       document.getElementById("btn-close")?.click();
-  //     })
-  // }
+  updateStatus() {
+    let statusUpdateObj = {
+      orderId: this.orderIdToUpdateStatus,
+      orderStatus: this.selectedItemForm.value.orderStatus
+    }
+
+    this.orderService.updateStatus(statusUpdateObj)
+      .subscribe(res => {
+        this.toast.success({ detail: "SUCCESS", summary: res.message, duration: 2000 })
+        document.getElementById("update")?.click();
+        this.getAllOrders();
+        this.selectedItemForm.reset();
+      })
+  }
 
   close() {
     this.isEditMode = false;

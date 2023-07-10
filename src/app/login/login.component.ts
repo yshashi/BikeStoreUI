@@ -29,14 +29,10 @@ export class LoginComponent implements OnInit {
   login() {
     if (this.loginForm.valid) {
       this.auth.loginService(this.loginForm.value)
-        .subscribe({
-          next: (res) => {
-            this.toast.success({summary:"Logged In Successfully!", detail:"SUCCESS", duration: 3000})
-            this.router.navigate(['home']);
-            localStorage.setItem("token", res.token)
-          }, error: (err) => {
-            console.log(err);
-          }
+        .subscribe(res=>{
+          this.toast.success({ summary: "Logged In Successfully!", detail: "SUCCESS", duration: 3000 })
+          this.router.navigate(['home']);
+          localStorage.setItem("token", res.token);
         })
     }
   }

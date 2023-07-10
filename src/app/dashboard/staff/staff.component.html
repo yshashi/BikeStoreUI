@@ -1,4 +1,8 @@
-
+<div class="d-flex justify-content-between">
+  <h4>Staffs</h4>
+  <button class="btn btn-success" (click)="onAdd()" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Staff</button>
+</div>
+<hr>
 <table class="table">
   <thead>
     <tr>
@@ -10,6 +14,7 @@
       <th scope="col">Active</th>
       <th scope="col">Store ID</th>
       <th scope="col">Role</th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody>
@@ -22,7 +27,110 @@
       <td>{{row.active === 1 ? "Yes" : "No"}}</td>
       <td>{{row.storeId}}</td>
       <td>{{showRole(row.managerId)}}</td>
+      <td ><button *ngIf="row.managerId != null" (click)="onEdit(row)" class="btn btn-success-outlined" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-edit text-success"></i></button></td>
     </tr>
 
   </tbody>
 </table>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">{{isEditMode? 'Update': 'Add'}} Staff</h1>
+        <button type="button" id="close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="staffForm">
+          <div class="row">
+            <div class="col">
+              <label class="form-label">Firstname</label>
+              <input formControlName="firstName" type="text" class="form-control">
+              <small *ngIf="staffForm.controls['firstName'].dirty && staffForm.hasError('required', 'firstName')"
+                class="text-danger">*Firstname is required!</small>
+            </div>
+            <div class="col">
+              <label class="form-label">Lastname</label>
+              <input formControlName="lastName" type="text" class="form-control">
+              <small *ngIf="staffForm.controls['lastName'].dirty && staffForm.hasError('required', 'lastName')"
+                class="text-danger">*Lastname is
+                Required</small>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label class="form-label">Email</label>
+              <input formControlName="email" type="email" class="form-control">
+              <small *ngIf="staffForm.controls['email'].dirty && staffForm.hasError('required', 'email')"
+                class="text-danger">*Email is Required</small>
+            </div>
+            <div class="col">
+              <label class="form-label">Password</label>
+              <input formControlName="password" type="password" class="form-control">
+              <small *ngIf="staffForm.controls['password'].dirty && staffForm.hasError('required', 'password')"
+                class="text-danger">*Password is Required</small>
+            </div>
+          </div>
+          <div class="row">
+
+            <div class="col">
+              <label class="form-label">Phone</label>
+              <input formControlName="phone" type="text" class="form-control">
+              <small *ngIf="staffForm.controls['phone'].dirty && staffForm.hasError('required', 'phone')"
+                class="text-danger">*Phone is Required</small>
+            </div>
+
+            <div class="col">
+              <label class="form-label">Active</label>
+              <select formControlName="active" class="form-select" aria-label="Default select example">
+                <option value="">--Select--</option>
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </select>
+              <small *ngIf="staffForm.controls['active'].dirty && staffForm.hasError('required', 'active')"
+                class="text-danger">*Active is required!</small>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Store</label>
+            <select formControlName="storeId" class="form-select" aria-label="Default select example">
+              <option value="" selected>--Select Store--</option>
+              <ng-container *ngFor="let row of stores">
+                <option [value]="row.storeId">{{row.storeName}}</option>
+              </ng-container>
+
+            </select>
+            <small *ngIf="staffForm.controls['storeId'].dirty && staffForm.hasError('required', 'storeId')"
+              class="text-danger">*Store is
+              Required</small>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Manager</label>
+            <select formControlName="managerId" class="form-select" aria-label="Default select example">
+              <option value="" selected>--Select Manager--</option>
+              <ng-container *ngFor="let row of staffsDropdown">
+                <option *ngIf="row.managerId === null && row.staffId === 1" [value]="row.staffId">{{row.firstName}} -
+                  Admin
+                </option>
+                <option *ngIf="row.managerId != null && row.staffId != 1" [value]="row.staffId">{{row.firstName}} -
+                  StakeHolder
+                </option>
+              </ng-container>
+            </select>
+            <small *ngIf="staffForm.controls['managerId'].dirty && staffForm.hasError('required', 'managerId')"
+              class="text-danger">*Manager is
+              Required</small>
+          </div>
+          <button *ngIf="!isEditMode" [disabled]="!staffForm.valid" type="button" (click)="addStaff()"
+            class="btn btn-primary d-block mx-auto">Add Staff</button>
+            <button *ngIf="isEditMode" [disabled]="!staffForm.valid" type="button" (click)="updateStaff()" class="btn btn-primary d-block mx-auto">Update
+              Staff</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

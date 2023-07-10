@@ -11,7 +11,7 @@
     </div>
   </div>
   <div class="add">
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Customer</button>
+    <button  *ngIf="role != 'Stakeholder'"class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Customer</button>
   </div>
 </div>
 <hr>
@@ -25,7 +25,7 @@
     <td> {{row.street}}</td>
     <td> {{row.city}}</td>
     <td> {{row.zipCode}}</td>
-    <td>
+    <td *ngIf="role != 'Stakeholder'">
       <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(row)" class="btn btn-outline-primary"><i class="fa fa-edit"></i></button>
     </td>
   </ng-template>

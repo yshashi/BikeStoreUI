@@ -27,7 +27,6 @@ export class OrderDetailComponent implements OnInit {
   getOrder(){
     this.orderService.getOrderById(this.orderId)
     .subscribe(res=>{
-      console.log(res);
       this.orderDetail = res;
       let sub = 0
       let dis = 0;

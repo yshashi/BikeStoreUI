@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between">
   <h4>Stores</h4>
-  <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Store</button>
+  <button *ngIf="role==='Stakeholder'" (click)="onAdd()" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Store</button>
 </div>
 <hr>
 <ngx-table #table [data]="data" [configuration]="configuration" [columns]="columns">
@@ -13,7 +13,7 @@
     <td> {{row.city}}</td>
     <td> {{row.state}}</td>
     <td> {{row.zipCode}}</td>
-    <td>
+    <td *ngIf="role==='Stakeholder'">
       <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(row)"
         class="btn btn-outline-primary"><i class="fa fa-edit"></i></button>
     </td>

@@ -1,6 +1,6 @@
 <div class="d-flex justify-content-between">
   <h4>Brands</h4>
-  <button (click)="onAddClicked()" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Brand</button>
+  <button *ngIf="role === 'Admin'" (click)="onAddClicked()" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Brand</button>
 </div>
 <hr>
 <ngx-table [data]="data" [configuration]="configuration" [columns]="columns">
@@ -8,7 +8,7 @@
     <td> {{row.brandId}}</td>
     <td> {{row.brandName}}</td>
     <td>
-      <button data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(row)"
+      <button *ngIf="role === 'Admin'" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(row)"
         class="btn btn-outline-primary"><i class="fa fa-edit"></i></button>
     </td>
   </ng-template>

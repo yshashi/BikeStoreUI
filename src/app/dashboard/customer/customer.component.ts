@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgToastService } from 'ng-angular-popup';
 import { APIDefinition, Columns, Config, DefaultConfig } from 'ngx-easy-table';
+import { AuthService } from 'src/app/service/auth.service';
 import { CustomerService } from 'src/app/service/customer.service';
 
 @Component({
@@ -17,14 +18,16 @@ export class CustomerComponent implements OnInit {
   filterZipCode = '';
   isEditMode = false;
   custIdToUpdate:number = 0;
+  role = '';
 
   customerForm!: FormGroup;
-  constructor(private customerService: CustomerService, private fb: FormBuilder, private toast: NgToastService) { }
+  constructor(private customerService: CustomerService,private auth: AuthService, private fb: FormBuilder, private toast: NgToastService) { }
   public configuration!: Config;
   public columns: Columns[] = [];
   public data: any[] = [];
 
   ngOnInit(): void {
+    this.role = this.auth.getDecodedToken().role;
     this.customerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
@@ -35,18 +38,43 @@ export class CustomerComponent implements OnInit {
       state: ['', Validators.required],
       zipCode: ['', Validators.required],
     })
-    this.columns = [
-      { key: 'customerId', title: 'ID' },
-      { key: 'firstName', title: 'FirstName' },
-      { key: 'lastName', title: 'LastName' },
-      { key: 'email', title: 'Email' },
-      { key: 'state', title: 'State' },
-      { key: 'street', title: 'Street' },
-      { key: 'city', title: 'City' },
-      { key: 'zipCode', title: 'ZipCode' },
-      {key:'action', title: 'Action'}
+    if(this.role === 'Staff'){
+      this.columns = [
+        { key: 'customerId', title: 'ID' },
+        { key: 'firstName', title: 'FirstName' },
+        { key: 'lastName', title: 'LastName' },
+        { key: 'email', title: 'Email' },
+        { key: 'state', title: 'State' },
+        { key: 'street', title: 'Street' },
+        { key: 'city', title: 'City' },
+        { key: 'zipCode', title: 'ZipCode' },
+        { key: 'action', title: 'Action' }
 
-    ];
+      ];
+    }else if(this.role === 'Stakeholder'){
+      this.columns = [
+        { key: 'customerId', title: 'ID' },
+        { key: 'firstName', title: 'FirstName' },
+        { key: 'lastName', title: 'LastName' },
+        { key: 'email', title: 'Email' },
+        { key: 'state', title: 'State' },
+        { key: 'street', title: 'Street' },
+        { key: 'city', title: 'City' },
+        { key: 'zipCode', title: 'ZipCode' }
+      ];
+    }else{
+      this.columns = [
+        { key: 'customerId', title: 'ID' },
+        { key: 'firstName', title: 'FirstName' },
+        { key: 'lastName', title: 'LastName' },
+        { key: 'email', title: 'Email' },
+        { key: 'state', title: 'State' },
+        { key: 'street', title: 'Street' },
+        { key: 'city', title: 'City' },
+        { key: 'zipCode', title: 'ZipCode' },
+        { key: 'action', title: 'Action' }
+      ];
+    }
     this.getAllCustomer();
 
   }

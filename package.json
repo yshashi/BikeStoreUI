@@ -22,6 +22,7 @@
     "@auth0/angular-jwt": "^5.1.2",
     "ng-angular-popup": "^0.4.7",
     "ngx-easy-table": "^15.5.0",
+    "ngx-spinner": "^16.0.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

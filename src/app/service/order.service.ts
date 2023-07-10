@@ -16,4 +16,16 @@ export class OrderService {
   getOrderById(id: number){
     return this.http.get<any>(`${baseUrl}order/${id}`)
   }
+
+  createOrder(order: any){
+    return this.http.post<any>(`${baseUrl}order`, order);
+  }
+
+  updateStatus(status: any){
+    return this.http.post<any>(`${baseUrl}order/updateStatus`, status)
+  }
+
+  getOrdersByStaffId(staffId: number){
+    return this.http.get<any>(`${baseUrl}order/staff/${staffId}`)
+  }
 }

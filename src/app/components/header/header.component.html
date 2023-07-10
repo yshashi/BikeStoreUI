@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+    <a routerLink="/home" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto cursor-pointer link-body-emphasis text-decoration-none">
       <svg class="bi me-2" width="40" height="32">
         <use xlink:href="#bootstrap"></use>
       </svg>
@@ -12,10 +12,10 @@
       <li class="nav-item"><a routerLink="/home/customer" routerLinkActive="active" class="nav-link">Customer</a></li>
       <li class="nav-item"><a routerLink="/home/products" routerLinkActive="active" class="nav-link">Products</a></li>
       <li class="nav-item"><a routerLink="/home/orders" routerLinkActive="active" class="nav-link">Orders</a></li>
-      <li class="nav-item"><a routerLink="/home/store" routerLinkActive="active" class="nav-link">Store</a></li>
+      <li *ngIf="role === 'Admin' || role === 'Stakeholder'" class="nav-item"><a routerLink="/home/store" routerLinkActive="active" class="nav-link">Store</a></li>
       <li *ngIf="role === 'Admin' || role === 'Stakeholder'" class="nav-item"><a routerLink="/home/staff" routerLinkActive="active" class="nav-link">Staff</a></li>
-      <li *ngIf="role === 'Admin'|| role === 'Stakeholder'" class="nav-item"><a routerLink="/home/category" routerLinkActive="active" class="nav-link">Category</a></li>
-      <li class="nav-item"><a routerLink="/home/brands" routerLinkActive="active" class="nav-link">Brands</a></li>
+      <li *ngIf="role === 'Admin'" class="nav-item"><a routerLink="/home/category" routerLinkActive="active" class="nav-link">Category</a></li>
+      <li *ngIf="role === 'Admin'" class="nav-item"><a routerLink="/home/brands" routerLinkActive="active" class="nav-link">Brands</a></li>
       <li class="nav-item"><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-link">Logout</a></li>
     </ul>
   </header>
